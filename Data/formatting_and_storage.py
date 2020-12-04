@@ -90,7 +90,19 @@ def read_from_tfrecord(filenames):
 
 
 
+# To parse a "tf.train.Example" proto you need to provide
+# a feature_description mapping feature names to their shape
+# and type.
 
+feature_description = {
+	"feature0": tf.io.FixedLenFeature([], tf.int64, default_value=0),
+	"feature1": tf.io.FixedLenFeature([], tf.int64, default_value=0),
+	"feature2":tf.io.FixedLenFeature([], tf.string, default_value=""),
+	"feature3":tf.io.FixedLenFeature([], tf.float32, default_value=0.0),
+}
+
+def _parse_function(example_proto):
+	# parse the input "tf"
 
 
 
