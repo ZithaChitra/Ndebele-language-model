@@ -1,0 +1,1 @@
+""" Generates text in ndebele """
