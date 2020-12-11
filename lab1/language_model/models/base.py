@@ -15,6 +15,7 @@ DIRNAME = Path(__file__).parents[1].resolve() / "weights"
 
 
 class Model:
+
     """Base class, to be subclassed by predictors for specific type of data."""
 
     def __init__(
@@ -100,15 +101,3 @@ class Model:
 
     def save_weights(self):
         self.network.save_weights(self.weights_filename)
-© 2020 GitHub, Inc.
-Terms
-Privacy
-Security
-Status
-Help
-Contact GitHub
-Pricing
-API
-Training
-Blog
-About
