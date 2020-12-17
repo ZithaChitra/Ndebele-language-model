@@ -50,4 +50,58 @@ def run_experiment(experiment_config: Dict, save_weights: bool, gpu_ind: int, us
 
 	datasets_module = importlib.import_module("text_recognizer.datasets")
 	dataset_class_ = getattr(datasets_module, experiment_config["dataset"])
-	
+	dataset_args = experiment_config.get("dataset_args", {})
+	dataset = dataset_class_(dataset_args)
+	dataset.load_or_generate_data()
+	print(data)
+
+	models_module = importlib.import_module("text_recognizer.models")
+	model_class_ = getattr(models_module, experiment_config["model"])
+
+	networks_module = importlib.import_module("text_recognizer.networks")
+	network_fn = getattr(networks_module, experiment_config["network"])
+	network_args = experiment_config.get("network_args", {})
+	model = model_class_(
+		dataset_cls=dataset_class_, network_fn=network_fn, dataset_args=dataset_args, network_args=network_args,
+		)
+	print(model)
+
+	experiment_config["train_args"] = {
+		**DEFAULT_TRAIN_ARGS,
+		**experiment_config.get("train_args", {})
+	}
+
+	train_model(
+		model,
+		dataset,
+		epochs=experiment_config["train_args"]["epochs"],
+		batch_size=experiment_config["train_args"]["batch_size"]
+		)
+	score = model.evaluate(dataset.x_test, dataset.y_test)
+	print(f"Test evsluation: {score}")
+
+	if save_weights:
+		model.save_weights()
+
+
+def _parse_args():
+	""" Parse command-line arguments. """
+	parser = argparse.ArgumentParser()
+	pasrer.add_argument("--gpu", default=0, help="Provide index of GPU to use")
+	parser.add_argument(
+		"--save",
+		default=False,
+		dest="save",
+		action="store_true",
+		help="If true, then final weights will be saved to canonical, version-controlled location"
+		)
+	parser.add_argument(
+		"experiment_config",
+		type=str,
+		help='Experimenet JSON (\'{"dataset": "EmnistDataset", "model": "CharacterModel", "network": "mlp"}\'',
+		)
+	parser.add_argument(
+        "--nowandb", default=False, action="store_true", help="If true, do not use wandb for this run",
+    )
+    args = parser.parse_args()
+    return args
