@@ -31,6 +31,9 @@ class Model:
         self.network = network_fn(self.data.input_shape, self.data.output_shape, **network_args)
         self.network.summary()
 
+        self.batch_argument_fn: Optional[Callable] = None
+        self.batch_format_fn: Optional[Callable] = None
+
     @property
     def image_shape(self):
         return self.data.input_shape
