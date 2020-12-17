@@ -105,3 +105,18 @@ def _parse_args():
     )
     args = parser.parse_args()
     return args
+
+
+   def main():
+   	""" Run experiment. """
+   	args = _parse_args()
+
+   	experiment_config = json.loads(args.experiment_config)
+   	os.environ["CUDA_VISIBLE_DEVICES"] = f"{args.gpu}"
+   	run_experiment(experiment_config, args.save, args.gpu, use_wandb=not args.nowandb)
+
+
+ if __name__ == "__main__":
+ 	main()
+
+ 
