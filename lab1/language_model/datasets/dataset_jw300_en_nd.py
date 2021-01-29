@@ -1,19 +1,16 @@
 # dataset-jw300-en-nd.py
-
-from
-
-
+import os
 from language_model.datasets.dataset import Dataset
+
 
 class DatasetJW300(Dataset):
 	""" 
 	Class for datasets downloaded from the JW300 projecct
 	"""
 	
-	def load_or_generate(self):
-		""" returns self.data """
-		pass
+	# def load_or_generate(self):
 
+		
 
 	@classproperty
 	def input_shape(self):

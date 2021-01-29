@@ -4,6 +4,7 @@
 from pathlib import Path
 import argparse
 import os
+import opustools_pkg
 
 from language_model import util
 
@@ -24,29 +25,25 @@ class Dataset:
 	def data_dirname(self):
 		return Path(__Path__).resolve() / "data"
 
-	def load_or_generate(self):
+	def load_or_generate(self, source="nd", target="en"):
 		""" returns self.data """
 		# TODO: Set your source and target languages. Keep in mind, these traditionally use language codes as found here:
 		# These will also become the suffix's of all vocab and corpus files used throughout
 		source_language = "en"
-		target_language = "xh" 
-		lc = False  # If True, lowercase the data.
-		seed = 42  # Random seed for shuffling.
-		tag = "baseline" # Give a unique name to your folder - this is to ensure you don't rewrite any models you've already submitted
-		os.environ["src"] = source_language # Sets them in bash as well, since we often use bash scripts
-		os.environ["tgt"] = target_language
-		os.environ["tag"] = tag
+		target_language = "nd" 
+		
+		
 
 
-	def _download_raw_dataset(metadata):
-		if os.path.exists(metadata["filename"]):
-			return
+	# def _download_raw_dataset(metadata):
+	# 	if os.path.exists(metadata["filename"]):
+	# 		return
 
-		print(f"Downloading raw dataset from {metadata[url]}...")
-		util.download_url(metadata["url"], metadata["filename"])
-		sha256 = util.compute_sha256(metadata["filename"])
-		if sha256 != metadata["sha256"]:
-			raise ValueError("Downloaded data file SHA-256 does not match that listed in the metadata document")
+	# 	print(f"Downloading raw dataset from {metadata[url]}...")
+	# 	util.download_url(metadata["url"], metadata["filename"])
+	# 	sha256 = util.compute_sha256(metadata["filename"])
+	# 	if sha256 != metadata["sha256"]:
+	# 		raise ValueError("Downloaded data file SHA-256 does not match that listed in the metadata document")
 
 
 
