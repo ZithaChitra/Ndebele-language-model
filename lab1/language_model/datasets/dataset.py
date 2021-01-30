@@ -4,7 +4,6 @@
 from pathlib import Path
 import argparse
 import os
-import opustools_pkg
 
 from language_model import util
 
@@ -18,20 +17,18 @@ class Dataset:
 	   parameters ahead of time.
 	"""
 	self.data = load_or_generate()
-	self.shape = # Function to get input shape
+	self.shape = input_shape()
 
 
 	@classmethod
 	def data_dirname(self):
 		return Path(__Path__).resolve() / "data"
 
-	def load_or_generate(self, source="nd", target="en"):
-		""" returns self.data """
-		# TODO: Set your source and target languages. Keep in mind, these traditionally use language codes as found here:
-		# These will also become the suffix's of all vocab and corpus files used throughout
-		source_language = "en"
-		target_language = "nd" 
-		
+	def load_or_generate(self):
+		"""
+		Loads data if it is already in local storage, otherwise
+		it dowloads it from external server.
+		"""
 		
 
 
