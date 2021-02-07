@@ -3,7 +3,7 @@
 # Goal: Build a model, e.g a language Model
 
 # Metrics to look at:
-# 1. Human-level performance or some benchmarka
+# 1. Human-level performance or some benchmark
 # 2. Trainig set error
 # 3. Dev set error
 
@@ -42,9 +42,35 @@
 # ------------------------------------------------------------------
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+# __DATA__
+
+# -> Make sure Dev and test set are from same distribution.
+	# This is because an ML team will spend a lot of time optimizing/tunning for the Dev set.
+	# If the test set has a different distribution from the Dev set then the model simply will not work.
 
 
+# ------------------------------------------------------------------
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# ------------------------------------------------------------------
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+# __Human level perfomance__
 
+# -> Human level perfomance as a benchmark
 
+# 	|                               
+# 	|       ________________________  model perfomance                          
+# 	|      /                             
+# 	|...../.......................    human-level perfomance                         
+# 	|    /                            
+# 	|   /                           
+# 	|  /                             
+# 	| /                               
+# 	|/______________________________
+# 				TIME
+
+# -While worse than human level perfomance, you still have good ways to progress:
+# 	> Get labels from humans.
+# 	> Error analysis.
+# 	> Estimate bias variance effect.
 
