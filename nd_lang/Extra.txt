@@ -1,0 +1,42 @@
+_____Mini_Journal_____
+
+Think of this file as a mini journal which will contain some of my ideas, thoughts, and questions, that i have and that may 
+surface throughout the process of building this project. These may be scientifical and/or philosophical, but really
+nothing original or profound for that matter. I suppose in simple terms this is a doucumentation of my thought process in 
+trying to "make this project work". It is important to note however that i'm just self taught student in the fields of both
+computer programming and artificial intelligece and therefore i might have limited knowledge in some things. In that extent,
+don't take anything i say too seriously. 
+
+
+1. _____Back_to_the_basics_____
+
+-> What is a language_
+   What is a language ? This is a question i find myself asking every once in a while, and the simplest answer is just
+   one google search away. On Wikipedia it says "a language is a structured system of communication used by humans
+   consisting of speech (spoken language), gestures (sign language) and writing" and i think this definition will do
+   for now. The keyword in that definition is "structured", which simply means there are _rules_ for each language, and
+   in the context of written language (which is the focus of this repo) these rules are what we call grammar.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

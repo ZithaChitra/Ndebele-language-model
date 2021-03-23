@@ -1,0 +1,6 @@
+setup.py
+Ndebele_nd_languuage_model.egg-info/PKG-INFO
+Ndebele_nd_languuage_model.egg-info/SOURCES.txt
+Ndebele_nd_languuage_model.egg-info/dependency_links.txt
+Ndebele_nd_languuage_model.egg-info/requires.txt
+Ndebele_nd_languuage_model.egg-info/top_level.txt
