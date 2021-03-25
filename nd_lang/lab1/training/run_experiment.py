@@ -112,8 +112,8 @@ def main():
 	args = _parse_args()
 
 	experiment_config = json.loads(args.experiment_config)
-	os.environ["CUDA_VISIBLE_DEVICES"] = f"{args.gpu}"
-	run_experiment(experiment_config, args.save, args.gpu, use_wandb=not args.nowandb)
+	# os.environ["CUDA_VISIBLE_DEVICES"] = f"{args.gpu}"
+	run_experiment(experiment_config, args.save, args.gpu, use_wandb=False, args.nowandb)
 
 
 if __name__ == "__main__":

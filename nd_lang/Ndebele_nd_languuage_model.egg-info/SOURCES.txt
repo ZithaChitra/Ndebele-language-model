@@ -23,4 +23,5 @@ lab1/language_model/networks/mlp.py
 lab1/language_model/networks/transformer.py
 lab1/training/__init__.py
 lab1/training/run_experiment.py
+lab1/training/run_experiment2.py
 lab1/training/util.py

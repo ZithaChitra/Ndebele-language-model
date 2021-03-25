@@ -5,9 +5,9 @@ from typing import Callable, Dict, Optional
 
 from tensorflow.keras.models import Model as KerasModel
 from tensorflow.keras.optimizers import RMSprop
-import numpy as np
+# import numpy as np
 
-from lab1.language_model.datasets.dataset import Dataset
+from lab1.language_model.datasets.house_pred import HousingData
 
 DIRNAME = Path(__file__).parents[1].resolve() / "weights"
 
@@ -56,37 +56,36 @@ class Model:
                             metrics=self.metrics
         )
 
-        train_sequence = Dataset(
-            dataset.x_train,
-            dataset.y_train,
-            batch_size,
-            augment_fn=self.batch_augment_fn,
-            format_fn=self.batch_format_fn,
-        )
+        # train_sequence = Dataset(
+        #     dataset.x_train,
+        #     dataset.y_train,
+        #     batch_size,
+        #     augment_fn=self.batch_augment_fn,
+        #     format_fn=self.batch_format_fn,
+        # )
 
-        test_sequence = Dataset(
-            dataset.x_test,
-            dataset.y_test,
-            batch_size,
-            augment_fn=self.batch_augment_fn if augment_val else None,
-            format_fn=self.batch_format_fn
-        )
+        # test_sequence = Dataset(
+        #     dataset.x_test,
+        #     dataset.y_test,
+        #     batch_size,
+        #     augment_fn=self.batch_augment_fn if augment_val else None,
+        #     format_fn=self.batch_format_fn
+        # )
 
         self.network.fit(
-            train_sequence,
+            self.data.X_tr, self.data.y_tr,
             epochs=epochs,
             callbacks=callbacks,
-            validation_data=test_sequence,
             use_multiprocessing=False,
             workers=1,
             shuffle=True,
         )
 
-    def evaluate(self, x: np.ndarray, y: np.ndarray, batch_size: int = 16, verbose: bool = True):
-        # pylint: disable=unused-argument
-        sequence = Dataset(x, y, batch_size=batch_size)
-        preds = self.network.predict(sequence)
-        return np.mean(np.argmax(preds, -1) == np.argmax(y, -1))
+    # def evaluate(self, x: np.ndarray, y: np.ndarray, batch_size: int = 16, verbose: bool = True):
+    #     # pylint: disable=unused-argument
+    #     sequence = Dataset(x, y, batch_size=batch_size)
+    #     preds = self.network.predict(sequence)
+    #     return np.mean(np.argmax(preds, -1) == np.argmax(y, -1))
 
     def loss(self):
         return "categorical_crossentropy"
@@ -102,3 +101,13 @@ class Model:
 
     def save_weights(self):
         self.network.save_weights(self.weights_filename)
+
+
+
+
+
+
+
+
+
+		
