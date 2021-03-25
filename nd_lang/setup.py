@@ -21,7 +21,7 @@ setup(
     url='https://github.com/ZithaChitra/Ndebele-language-model',
     download_url='https://github.com/ZithaChitra/Ndebele-language-model/tree/main/nd_lang_model',
     license='MIT',
-    packages=find_packages("lab1", "lab1*"),
+    packages=find_packages(),
     include_package_data=True,
     author='Zitha Chitra',
     install_requires=install_requires,

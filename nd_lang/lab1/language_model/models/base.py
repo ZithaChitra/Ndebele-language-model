@@ -7,7 +7,7 @@ from tensorflow.keras.models import Model as KerasModel
 from tensorflow.keras.optimizers import RMSprop
 import numpy as np
 
-from language_model.datasets.dataset_sequence import DatasetSequence
+from lab1.language_model.datasets.dataset import Dataset
 
 DIRNAME = Path(__file__).parents[1].resolve() / "weights"
 
@@ -56,7 +56,7 @@ class Model:
                             metrics=self.metrics
         )
 
-        train_sequence = DatasetSequence(
+        train_sequence = Dataset(
             dataset.x_train,
             dataset.y_train,
             batch_size,
@@ -64,7 +64,7 @@ class Model:
             format_fn=self.batch_format_fn,
         )
 
-        test_sequence = DatasetSequence(
+        test_sequence = Dataset(
             dataset.x_test,
             dataset.y_test,
             batch_size,
@@ -84,7 +84,7 @@ class Model:
 
     def evaluate(self, x: np.ndarray, y: np.ndarray, batch_size: int = 16, verbose: bool = True):
         # pylint: disable=unused-argument
-        sequence = DatasetSequence(x, y, batch_size=batch_size)
+        sequence = Dataset(x, y, batch_size=batch_size)
         preds = self.network.predict(sequence)
         return np.mean(np.argmax(preds, -1) == np.argmax(y, -1))
 

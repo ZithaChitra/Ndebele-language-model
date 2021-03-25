@@ -6,11 +6,11 @@ import importlib
 from typing import Dict
 import os
 
-from training.util import train_model
+from lab1.training.util import train_model
 
 DEFAULT_TRAIN_ARGS = {"batch_size":64, "epochs":16}
 
-def run_experiment(experiment_config: Dict, save_weights: bool, gpu_ind: int, use_wandb: bool = True):
+def run_experiment(experiment_config: Dict, save_weights: bool, gpu_ind: int, use_wandb: bool = False):
 	"""
 	Run a training experiment.
 
@@ -53,7 +53,7 @@ def run_experiment(experiment_config: Dict, save_weights: bool, gpu_ind: int, us
 	dataset_args = experiment_config.get("dataset_args", {})
 	dataset = dataset_class_(dataset_args)
 	dataset.load_or_generate_data()
-	print(data)
+	# print(data)
 
 	models_module = importlib.import_module("text_recognizer.models")
 	model_class_ = getattr(models_module, experiment_config["model"])
@@ -87,7 +87,7 @@ def run_experiment(experiment_config: Dict, save_weights: bool, gpu_ind: int, us
 def _parse_args():
 	""" Parse command-line arguments. """
 	parser = argparse.ArgumentParser()
-	pasrer.add_argument("--gpu", default=0, help="Provide index of GPU to use")
+	parser.add_argument("--gpu", default=0, help="Provide index of GPU to use")
 	parser.add_argument(
 		"--save",
 		default=False,
@@ -103,20 +103,20 @@ def _parse_args():
 	parser.add_argument(
         "--nowandb", default=False, action="store_true", help="If true, do not use wandb for this run",
     )
-    args = parser.parse_args()
-    return args
+	args = parser.parse_args()
+	return args
 
 
-   def main():
-   	""" Run experiment. """
-   	args = _parse_args()
+def main():
+	""" Run experiment. """
+	args = _parse_args()
 
-   	experiment_config = json.loads(args.experiment_config)
-   	os.environ["CUDA_VISIBLE_DEVICES"] = f"{args.gpu}"
-   	run_experiment(experiment_config, args.save, args.gpu, use_wandb=not args.nowandb)
+	experiment_config = json.loads(args.experiment_config)
+	os.environ["CUDA_VISIBLE_DEVICES"] = f"{args.gpu}"
+	run_experiment(experiment_config, args.save, args.gpu, use_wandb=not args.nowandb)
 
 
- if __name__ == "__main__":
+if __name__ == "__main__":
  	main()
 
  
