@@ -1,19 +1,23 @@
 """ Script to run an experiment """
-# import importlib
+import importlib
 from typing import Dict
 # import os
 import click
 
-# from lab1.training.util import train_model
+from lab1.training.util import train_model
 
 DEFAULT_TRAIN_ARGS = {"batch_size":64, "epochs":16}
 
+
+
 @click.command()
-@click.argument("experiment-config")
-@click.option("--save-weights")
-@click.option("--gpu-ind")
-@click.option("--use-wandb")
-def run_experiment(experiment_config: Dict, save_weights: bool, gpu_ind: int, use_wandb: bool = False):
+@click.argument("dataset")
+@click.argument("network")
+@click.argument("model")
+@click.option("--epoch", default=10)
+@click.option("--batch-size")
+@click.option("--train-args", default=DEFAULT_TRAIN_ARGS)
+def run_experiment(dataset, network, model, epoch, ):
 	"""
 	Run a training experiment.
 
@@ -48,8 +52,34 @@ def run_experiment(experiment_config: Dict, save_weights: bool, gpu_ind: int, us
 			sync training run to wandb
 
 	"""
-	experiment_config = experiment_config
-	print(f"exp_config: {experiment_config}")
+	# print(f"Running experiment with config {experiment_config} on GPU {gpu_ind}")
+
+	datasets_module = importlib.import_module("lab1.language_model.datasets.housing_pred")
+	dataset_class_ = getattr(datasets_module, dataset)
+	# dataset_args = experiment_config.get("dataset_args", {})
+	dataset = dataset_class_()
+	dataset.load_or_generate_data()
+
+	models_module = importlib.import_module("lab1.language_model.models.base")
+	model_class_ = getattr(models_module, model)
+
+	networks_module = importlib.import_module("lab1.language_model.networks.mlp")
+	network_fn = getattr(networks_module, network)
+	network_args = experiment_config.get("network_args", {})
+	model = model_class_(
+		dataset_cls=dataset_class_, network_fn=network_fn, dataset_args=dataset_args, network_args=network_args,
+		)
+	
+
+	train_model(
+		model,
+		dataset,
+		epochs=epoch,
+		# batch_size=experiment_config["train_args"]["batch_size"]
+		)
+
+
+
 
 
 

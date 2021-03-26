@@ -48,17 +48,17 @@ def run_experiment(experiment_config: Dict, save_weights: bool, gpu_ind: int, us
 
 	print(f"Running experiment with config {experiment_config} on GPU {gpu_ind}")
 
-	datasets_module = importlib.import_module("text_recognizer.datasets")
+	datasets_module = importlib.import_module("lab1.language_model.datasets.housing_pred")
 	dataset_class_ = getattr(datasets_module, experiment_config["dataset"])
 	dataset_args = experiment_config.get("dataset_args", {})
 	dataset = dataset_class_(dataset_args)
 	dataset.load_or_generate_data()
 	# print(data)
 
-	models_module = importlib.import_module("text_recognizer.models")
+	models_module = importlib.import_module("lab1.language_model.models.base")
 	model_class_ = getattr(models_module, experiment_config["model"])
 
-	networks_module = importlib.import_module("text_recognizer.networks")
+	networks_module = importlib.import_module("lab1.language_model.networks.mlp")
 	network_fn = getattr(networks_module, experiment_config["network"])
 	network_args = experiment_config.get("network_args", {})
 	model = model_class_(

@@ -7,7 +7,7 @@ from tensorflow.keras.models import Model as KerasModel
 from tensorflow.keras.optimizers import RMSprop
 # import numpy as np
 
-from lab1.language_model.datasets.house_pred import HousingData
+
 
 DIRNAME = Path(__file__).parents[1].resolve() / "weights"
 
