@@ -53,9 +53,7 @@ class Model:
         if callbacks is None:
             callbacks = []
         
-        self.network.compile(loss=self.loss(), optimizer=self.optimizer(),
-                            metrics=self.metrics
-        )
+        self.network.compile(loss=self.loss(), optimizer=self.optimizer(), metrics=self.metrics())
 
         # train_sequence = Dataset(
         #     dataset.x_train,
