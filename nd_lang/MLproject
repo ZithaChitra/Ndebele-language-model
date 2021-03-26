@@ -1,0 +1,13 @@
+name: nd language
+
+conda_env: conda.yaml
+# Can have a docker_env instead of a conda_env, e.g.
+# docker_env:
+#    image:  mlflow-docker-example
+
+entry_points: 
+	main:
+		command: "python lab1/training/run_experiment2.py"
+
+
+	
