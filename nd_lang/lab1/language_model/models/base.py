@@ -3,6 +3,7 @@
 from pathlib import Path
 from typing import Callable, Dict, Optional
 
+from tensorflow import keras
 from tensorflow.keras.models import Model as KerasModel
 from tensorflow.keras.optimizers import RMSprop
 # import numpy as np
@@ -28,7 +29,7 @@ class Model:
 
         if network_args is None:
             network_args = {}
-        self.network = network_fn(self.data.input_shape, self.data.output_shape, **network_args)
+        self.network = network_fn()
         self.network.summary()
 
         self.batch_argument_fn: Optional[Callable] = None
@@ -88,10 +89,12 @@ class Model:
     #     return np.mean(np.argmax(preds, -1) == np.argmax(y, -1))
 
     def loss(self):
-        return "categorical_crossentropy"
+        return "mse"
+
 
     def optimizer(self):
-        return RMSprop()
+        optimizer = keras.optimizers.SGD(learning_rate=0.01, momentum=0.0, nesterov=False, name="SGD")
+        return optimizer
 
     def metrics(self):
         return ["accuracy"]

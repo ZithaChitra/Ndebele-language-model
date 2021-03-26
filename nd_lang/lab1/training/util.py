@@ -11,8 +11,11 @@ from lab1.language_model.models.base import Model
 early_stop = True
 
 
-def train_model(model: Model, dataset: Dataset, epochs: int, batch_size: int,
-				 use_wandb: bool = False) -> Model:
+def train_model(model: Model,
+			dataset: Dataset,
+			epochs: int, 
+			# batch_size: int,
+			use_wandb: bool = False) -> Model:
 	
 	""" Train model. """
 	callbacks = []
@@ -23,7 +26,10 @@ def train_model(model: Model, dataset: Dataset, epochs: int, batch_size: int,
 
 	model.network.summary()
 	# t = time()
-	model.fit(dataset=dataset, batch_size=batch_size, epochs=epochs, callbacks=callbacks)
+	model.fit(dataset=dataset, 
+				# batch_size=batch_size, 
+				epochs=epochs, 
+				callbacks=callbacks)
 	# print("Training took {:2f} s".format(time() - 1))
 
 	
