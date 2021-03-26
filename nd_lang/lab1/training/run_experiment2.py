@@ -10,7 +10,6 @@ from lab1.training.util import train_model
 DEFAULT_TRAIN_ARGS = {"batch_size":64, "epochs":16}
 
 
-
 @click.command()
 @click.argument("dataset", default="HousingData")
 @click.argument("network", default="mlp")
@@ -34,25 +33,29 @@ def run_experiment(dataset, network, model, epoch, train_args):
 	network_fn = getattr(networks_module, network)
 	# network_args = experiment_config.get("network_args", {})
 
-	mlflow.set_tracking_uri("sqlite:///mlruns.db")
+	# mlflow.set_tracking_uri("sqlite:///mlruns.db")
 
-	with mlflow.start_run:
+	with mlflow.start_run():
 		mlflow.log_param("dataset", dataset)
 		mlflow.log_param("network", network)
 		mlflow.log_param("model", model)
 	
-		model = model_class_(dataset_cls=dataset_class_, network_fn=network_fn)
+	model = model_class_(dataset_cls=dataset_class_, network_fn=network_fn)
 		
 
-		train_model(
-			model,
-			dataset,
-			epochs=epoch,
-			# batch_size=experiment_config["train_args"]["batch_size"]
-			)
+	train_model(
+		model,
+		dataset,
+		epochs=epoch,
+		# batch_size=experiment_config["train_args"]["batch_size"]
+	)
 
 
 
 if __name__ == "__main__":
+	# args = get_args()
+	# print(args["dataset"], args["network"], args["model"], args["epoch"], args["train_args"])
+	# run_experiment("HousingData", "mlp", "Model", 10, DEFAULT_TRAIN_ARGS )
 	run_experiment()
 	
+

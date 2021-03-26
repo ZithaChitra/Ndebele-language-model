@@ -1,4 +1,4 @@
-name: nd language
+name: nd_language
 
 conda_env: conda.yaml
 # Can have a docker_env instead of a conda_env, e.g.

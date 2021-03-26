@@ -2,3 +2,4 @@ click
 scikit-learn
 pandas
 numpy==1.19.5
+mlflow==1.14.1
