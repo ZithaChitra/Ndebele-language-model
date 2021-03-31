@@ -6,7 +6,7 @@ from tensorflow.keras.callbacks import EarlyStopping
 
 
 from lab1.language_model.datasets.dataset import Dataset
-from lab1.language_model.models.base import Model
+from lab1.language_model.models.base2 import Model
 
 early_stop = True
 

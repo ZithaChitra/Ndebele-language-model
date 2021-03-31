@@ -7,6 +7,10 @@ import mlflow
 
 from lab1.training.util import train_model
 
+from mlflow.models.signature import ModelSignature
+from mlflow.types.schema import TensorSpec, Schema
+import numpy as np
+
 DEFAULT_TRAIN_ARGS = {"batch_size":64, "epochs":16}
 
 
@@ -26,7 +30,7 @@ def run_experiment(dataset, network, model, epoch, train_args):
 	dataset = dataset_class_()
 	# dataset.load_or_generate_data()
 
-	models_module = importlib.import_module("lab1.language_model.models.base")
+	models_module = importlib.import_module("lab1.language_model.models.base2")
 	model_class_ = getattr(models_module, model)
 
 	networks_module = importlib.import_module("lab1.language_model.networks.mlp")
@@ -34,21 +38,29 @@ def run_experiment(dataset, network, model, epoch, train_args):
 	# network_args = experiment_config.get("network_args", {})
 
 	# mlflow.set_tracking_uri("sqlite:///mlruns.db")
-
-	with mlflow.start_run():
-		mlflow.log_param("dataset", dataset)
-		mlflow.log_param("network", network)
-		mlflow.log_param("model", model)
-	
 	model = model_class_(dataset_cls=dataset_class_, network_fn=network_fn)
-		
+	input_schema = Schema([TensorSpec(type=np.dtype(np.float32), shape=(-1, 13), name="house_attribs")])
+	output_schema = Schema([TensorSpec(type=np.dtype(np.float32), shape=(-1, 1), name="predicted house price")])
+	signature = ModelSignature(inputs=input_schema, outputs=output_schema)
+	input_example = np.array([[1., 2.5, 3. , 1.7, 2.1, 1.3, .5, .75, .89, 1.9, 2.15, 2.2, .6]])
+	mlflow.pyfunc.save_model(path="my_model", python_model=model, signature=signature, input_example=input_example )
 
-	train_model(
-		model,
-		dataset,
-		epochs=epoch,
-		# batch_size=experiment_config["train_args"]["batch_size"]
-	)
+	# with mlflow.start_run():
+	# 	# mlflow.log_param("dataset", dataset)
+	# 	# mlflow.log_param("network", network)
+	# 	# mlflow.log_param("model", model)
+	
+	# 	model = model_class_(dataset_cls=dataset_class_, network_fn=network_fn)
+		
+	# 	# mlflow.keras.autolog()
+	# 	# model_ = train_model(
+	# 	# 	model,
+	# 	# 	dataset,
+	# 	# 	epochs=epoch,
+	# 	# 	# batch_size=experiment_config["train_args"]["batch_size"]
+	# 	# )
+	# 	mlflow.pyfunc.save_model(path="my_model", python_model=model )
+		
 
 
 

@@ -3,9 +3,13 @@ _____Mini_Journal_____
 Think of this file as a mini journal which will contain some of my ideas, thoughts, and questions, that i have and that may 
 surface throughout the process of building this project. These may be scientifical and/or philosophical, but really
 nothing original or profound for that matter. I suppose in simple terms this is a doucumentation of my thought process in 
-trying to "make this project work". It is important to note however that i'm just self taught student in the fields of both
+trying to "make this project work". It is important to note however that i'm just a self taught student in the fields of both
 computer programming and artificial intelligece and therefore i might have limited knowledge in some things. In that extent,
-don't take anything i say too seriously. 
+don't take anything i say too seriously.
+
+__one_more_thing_(before i begin)__
+-> The codebase for this project is based on this repo https://github.com/full-stack-deep-learning/fsdl-text-recognizer, 
+   which is provided as part of this amazing MLOps course https://fullstackdeeplearning.com/ . 
 
 
 1. _____Back_to_the_basics_____
