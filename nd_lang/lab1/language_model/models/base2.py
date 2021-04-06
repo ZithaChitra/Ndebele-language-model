@@ -14,7 +14,7 @@ import mlflow.pyfunc
 
 DIRNAME = Path(__file__).parents[1].resolve() / "weights"
 
-class Model(mlflow.pyfunc.PythonModel):
+class Model():
     """ Base class, to be subclassed by predictors for specific types of data """
     def __init__(
         self,
@@ -32,7 +32,7 @@ class Model(mlflow.pyfunc.PythonModel):
         if network_args is None:
             network_args = {}
         self.network = network_fn()
-        self.network.summary()
+        # self.network.summary()
 
         self.batch_argument_fn: Optional[Callable] = None
         self.batch_format_fn: Optional[Callable] = None
