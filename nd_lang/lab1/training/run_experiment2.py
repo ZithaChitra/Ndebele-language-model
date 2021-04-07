@@ -5,7 +5,8 @@ import importlib
 import click
 # import mlflow
 
-from lab1.training.util import train_model
+# from lab1.training.util import train_model
+from lab1.training.util import save_net_artifact
 import wandb
 from wandb.keras import WandbCallback
 
@@ -21,11 +22,11 @@ DEFAULT_TRAIN_ARGS = {"batch_size":64, "epochs":16}
 @click.argument("dataset", default="HousingData")
 @click.argument("network", default="mlp")
 @click.argument("model", default="Model")
+@click.argument("--name", default="nd_lang")
 @click.option("--epoch", default=10)
 @click.option("--train-args", default=DEFAULT_TRAIN_ARGS)
-def run_experiment(dataset, network, model, epoch, train_args):
-	
-	
+def run_experiment(dataset, network, model, name, epoch, train_args):
+
 	print(f"Running experiment with network '{network}' and dataset '{dataset}''")
 	datasets_module = importlib.import_module("lab1.language_model.datasets.house_pred")
 	dataset_class_ = getattr(datasets_module, dataset)
@@ -38,6 +39,8 @@ def run_experiment(dataset, network, model, epoch, train_args):
 
 	networks_module = importlib.import_module("lab1.language_model.networks.mlp")
 	network_fn = getattr(networks_module, network)
+	save_net_artifact(network_fn())
+	
 	# network_args = experiment_config.get("network_args", {})
 
 	# mlflow.set_tracking_uri("sqlite:///mlruns.db")
@@ -72,7 +75,7 @@ def run_experiment(dataset, network, model, epoch, train_args):
 		train_args = train_args
 	)
 	
-	with wandb.init(config=config):
+	with wandb.init(project=name, config=config):
 		config = wandb.config
 		model.fit(dataset=config.dataset, callbacks=[WandbCallback()])
 
