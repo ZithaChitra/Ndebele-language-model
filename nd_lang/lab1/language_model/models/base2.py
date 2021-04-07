@@ -6,10 +6,10 @@ from typing import Callable, Dict, Optional
 from tensorflow import keras
 from tensorflow.keras.models import Model as KerasModel
 from tensorflow.keras.optimizers import RMSprop
-import mlflow
+# import mlflow
 # import pandas
 import numpy as np
-import mlflow.pyfunc
+# import mlflow.pyfunc
 
 
 DIRNAME = Path(__file__).parents[1].resolve() / "weights"
@@ -32,7 +32,7 @@ class Model():
         if network_args is None:
             network_args = {}
         self.network = network_fn()
-        # self.network.summary()
+        self.network.summary()
 
         self.batch_argument_fn: Optional[Callable] = None
         self.batch_format_fn: Optional[Callable] = None

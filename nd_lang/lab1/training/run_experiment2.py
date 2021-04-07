@@ -3,13 +3,16 @@ import importlib
 # from typing import Dict
 # import os
 import click
-import mlflow
+# import mlflow
 
 from lab1.training.util import train_model
+import wandb
+from wandb.keras import WandbCallback
 
-from mlflow.models.signature import ModelSignature
-from mlflow.types.schema import TensorSpec, Schema
-import numpy as np
+# from mlflow.models.signature import ModelSignature
+# from mlflow.types.schema import TensorSpec, Schema
+# import numpy as np
+
 
 DEFAULT_TRAIN_ARGS = {"batch_size":64, "epochs":16}
 
@@ -39,11 +42,11 @@ def run_experiment(dataset, network, model, epoch, train_args):
 
 	# mlflow.set_tracking_uri("sqlite:///mlruns.db")
 	model = model_class_(dataset_cls=dataset_class_, network_fn=network_fn)
-	input_schema = Schema([TensorSpec(type=np.dtype(np.float32), shape=(-1, 13), name="house_attribs")])
-	output_schema = Schema([TensorSpec(type=np.dtype(np.float32), shape=(-1, 1), name="predicted house price")])
-	signature = ModelSignature(inputs=input_schema, outputs=output_schema)
-	input_example = np.array([[1., 2.5, 3. , 1.7, 2.1, 1.3, .5, .75, .89, 1.9, 2.15, 2.2, .6]])
-	mlflow.pyfunc.save_model(path="my_model", python_model=model, signature=signature, input_example=input_example )
+	# input_schema = Schema([TensorSpec(type=np.dtype(np.float32), shape=(-1, 13), name="house_attribs")])
+	# output_schema = Schema([TensorSpec(type=np.dtype(np.float32), shape=(-1, 1), name="predicted house price")])
+	# signature = ModelSignature(inputs=input_schema, outputs=output_schema)
+	# input_example = np.array([[1., 2.5, 3. , 1.7, 2.1, 1.3, .5, .75, .89, 1.9, 2.15, 2.2, .6]])
+	# mlflow.pyfunc.save_model(path="my_model", python_model=model, signature=signature, input_example=input_example )
 
 	# with mlflow.start_run():
 	# 	# mlflow.log_param("dataset", dataset)
@@ -60,7 +63,32 @@ def run_experiment(dataset, network, model, epoch, train_args):
 	# 	# 	# batch_size=experiment_config["train_args"]["batch_size"]
 	# 	# )
 	# 	mlflow.pyfunc.save_model(path="my_model", python_model=model )
-		
+
+	config = dict(
+		dataset = dataset,
+		network = network,
+		model = model,
+		epoch = epoch,
+		train_args = train_args
+	)
+	
+	with wandb.init(config=config):
+		config = wandb.config
+		model.fit(dataset=config.dataset, callbacks=[WandbCallback()])
+
+
+
+
+	# model_ = train_model(
+	# 		model,
+	# 		dataset,
+	# 		epoch
+	# 	)
+	# callbacks = []
+	# model.fit(dataset=dataset)
+
+
+
 
 
 

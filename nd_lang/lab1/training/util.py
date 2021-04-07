@@ -4,8 +4,8 @@
 from tensorflow.keras.callbacks import EarlyStopping
 from lab1.language_model.datasets.dataset import Dataset
 from lab1.language_model.models.base2 import Model
-import wandb
-from wandb.keras import WandbCallback
+# import wandb
+# from wandb.keras import WandbCallback
 
 # early_stop = True
 
@@ -23,10 +23,10 @@ def train_model(model: Model,
 	# 	early_stopping = EarlyStopping(monitor="val_loss", min_delta=0.01, patience=3, verbose=1, mode="auto")
 	# 	callbacks.append(early_stopping)
 
-	if use_wandb:
-		callbacks.append(WandbCallback)
+	# if use_wandb:
+	# 	callbacks.append(WandbCallback)
 
-	model.network.summary()
+	# model.network.summary()
 	# t = time()
 	model.fit(dataset=dataset, 
 				# batch_size=batch_size, 
