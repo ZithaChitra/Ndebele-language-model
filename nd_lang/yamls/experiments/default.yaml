@@ -1,0 +1,22 @@
+model: "Model"
+
+network:
+        name: "mlp"
+        network_args:
+                shapes:
+                        input_shape: ()
+                        output_shape: ()
+                hyperparams:
+                        layers_size: 64
+                        learning_rate: 0.03
+                        epochs: 15
+                        dropout_amount: 0.2
+                        num_layers: 4
+
+
+dataset:
+        name: "HousingData"
+        dataset_args: None
+
+
+project_name: "nd_lang"

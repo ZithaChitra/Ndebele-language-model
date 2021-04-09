@@ -34,7 +34,7 @@ def run_experiment(dataset, network, model, proj_name, epoch, train_args):
 
 	networks_module = importlib.import_module("lab1.language_model.networks.mlp")
 	network_fn = getattr(networks_module, network)
-	# save_net_artifact(project_name=proj_name, network=network_fn())
+	
 	
 	# network_args = experiment_config.get("network_args", {})
 

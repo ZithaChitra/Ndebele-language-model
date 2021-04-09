@@ -3,3 +3,4 @@ scikit-learn
 pandas
 numpy==1.19.5
 wandb
+pyyaml
