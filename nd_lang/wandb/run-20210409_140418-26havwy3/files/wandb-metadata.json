@@ -1,0 +1,22 @@
+{
+    "os": "Linux-5.4.0-1040-gcp-x86_64-with-glibc2.27",
+    "python": "3.8.8",
+    "heartbeatAt": "2021-04-09T14:04:21.501464",
+    "startedAt": "2021-04-09T14:04:18.146343",
+    "docker": null,
+    "cpu_count": 8,
+    "cuda": null,
+    "args": [],
+    "state": "running",
+    "program": "lab1/training/run_experiment2.py",
+    "codePath": "nd_lang/lab1/training/run_experiment2.py",
+    "git": {
+        "remote": "https://github.com/ZithaChitra/Ndebele-language-model",
+        "commit": "d87deea326ed63cf3ac860413c300382ed54965c"
+    },
+    "email": "replituser@example.com",
+    "root": "/home/runner/Ndebele-language-model",
+    "host": "9784d5b73229",
+    "username": "runner",
+    "executable": "/opt/virtualenvs/python3/bin/python"
+}
