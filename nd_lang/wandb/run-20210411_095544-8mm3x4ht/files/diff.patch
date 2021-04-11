@@ -1,0 +1,278 @@
+diff --git a/nd_lang/Ndebele_nd_languuage_model.egg-info/SOURCES.txt b/nd_lang/Ndebele_nd_languuage_model.egg-info/SOURCES.txt
+index 24dc34c..6b25193 100644
+--- a/nd_lang/Ndebele_nd_languuage_model.egg-info/SOURCES.txt
++++ b/nd_lang/Ndebele_nd_languuage_model.egg-info/SOURCES.txt
+@@ -26,4 +26,5 @@ lab1/language_model/networks/transformer.py
+ lab1/training/__init__.py
+ lab1/training/run_experiment.py
+ lab1/training/run_experiment2.py
+-lab1/training/util.py
+\ No newline at end of file
++lab1/training/util.py
++lab1/training/util_yaml.py
+\ No newline at end of file
+diff --git a/nd_lang/lab1/language_model/models/__pycache__/base2.cpython-38.pyc b/nd_lang/lab1/language_model/models/__pycache__/base2.cpython-38.pyc
+index 8f70465..a964cc1 100644
+Binary files a/nd_lang/lab1/language_model/models/__pycache__/base2.cpython-38.pyc and b/nd_lang/lab1/language_model/models/__pycache__/base2.cpython-38.pyc differ
+diff --git a/nd_lang/lab1/language_model/models/base2.py b/nd_lang/lab1/language_model/models/base2.py
+index 219310a..c36dbe1 100644
+--- a/nd_lang/lab1/language_model/models/base2.py
++++ b/nd_lang/lab1/language_model/models/base2.py
+@@ -31,7 +31,7 @@ class Model():
+ 
+         if network_args is None:
+             network_args = {}
+-        self.network = network_fn()
++        self.network = network_fn(network_args)
+         self.network.summary()
+ 
+         self.batch_argument_fn: Optional[Callable] = None
+diff --git a/nd_lang/lab1/language_model/networks/__pycache__/mlp.cpython-38.pyc b/nd_lang/lab1/language_model/networks/__pycache__/mlp.cpython-38.pyc
+index b124c58..04951df 100644
+Binary files a/nd_lang/lab1/language_model/networks/__pycache__/mlp.cpython-38.pyc and b/nd_lang/lab1/language_model/networks/__pycache__/mlp.cpython-38.pyc differ
+diff --git a/nd_lang/lab1/language_model/networks/mlp.py b/nd_lang/lab1/language_model/networks/mlp.py
+index dac4655..b324730 100644
+--- a/nd_lang/lab1/language_model/networks/mlp.py
++++ b/nd_lang/lab1/language_model/networks/mlp.py
+@@ -1,6 +1,5 @@
+ """ Define mlp network function. """
+-# from typing import Tuple
+-
++from typing import Dict
+ from tensorflow import keras
+ from tensorflow.keras.models import Model
+ # from tensorflow.keras.layers import Dense, Dropout, Flatten
+@@ -13,16 +12,21 @@ def mlp(
+ 	# layer_size: int = 128,
+ 	# dropout_amount: float = 0.2,
+ 	# num_layers: int = 3, 
++	net_config: Dict
+ )->Model:
+ 	"""
+ 	Creates a simple multi-layer perceptron
+ 	"""
+-	inputs = keras.Input(shape=(13,))
++	activation_fn = net_config["hyperparams"]["activation_fn"]
++	input_s = net_config["shapes"]["input_shape"]
++	output_s = net_config["shapes"]["output_shape"]
++
++	inputs = keras.Input(shape=(input_s,))
+ 	dense = layers.Dense(64, activation="relu")
+ 	x = dense(inputs)
+-	layer1 = layers.Dense(64, activation="relu")(x)
+-	layer2 = layers.Dense(64, activation="relu")(layer1)
+-	outputs = layers.Dense(1)(layer2)
++	layer1 = layers.Dense(64, activation=activation_fn)(x)
++	layer2 = layers.Dense(64, activation=activation_fn)(layer1)
++	outputs = layers.Dense(output_s)(layer2)
+ 	model = keras.Model(inputs=inputs, outputs=outputs, name="house_pred")
+ 
+ 
+diff --git a/nd_lang/lab1/training/run_experiment2.py b/nd_lang/lab1/training/run_experiment2.py
+index 3d1c305..1049904 100644
+--- a/nd_lang/lab1/training/run_experiment2.py
++++ b/nd_lang/lab1/training/run_experiment2.py
+@@ -6,70 +6,66 @@ import click
+ 
+ # from lab1.training.util import train_model
+ from lab1.training.util import save_net_artifact, save_data_raw_artifact, save_data_processed_artifact
++from lab1.training.util_yaml import yaml_loader
+ import wandb
+ from wandb.keras import WandbCallback
+-import numpy as np
++# import numpy as np
+ 
+ 
+ DEFAULT_TRAIN_ARGS = {"batch_size":64, "epochs":16}
+ 
+ 
+ @click.command()
+-@click.argument("dataset", default="HousingData")
+-@click.argument("network", default="mlp")
+-@click.argument("model", default="Model")
+-@click.option("--proj-name", default="nd_lang")
+-@click.option("--epoch", default=10)
++@click.argument("config_yaml", type=click.Path(exists=True), default="yamls/experiments/default.yaml")
+ @click.option("--train-args", default=DEFAULT_TRAIN_ARGS)
+-def run_experiment(dataset, network, model, proj_name, epoch, train_args):
++def run_experiment(config_yaml, train_args):
+ 
+-	print(f"Running experiment with network '{network}' and dataset '{dataset}''")
+-	datasets_module = importlib.import_module("lab1.language_model.datasets.house_pred")
+-	dataset_class_ = getattr(datasets_module, dataset)
+-	# dataset_args = experiment_config.get("dataset_args", {})
+ 
++	exp_config = yaml_loader(config_yaml)
++    
++	model = exp_config.get("model")
++
++	network = exp_config.get("network")
++	net_cl_name = network["name"]
++	net_config = network["network_args"]
++	
++
++	dataset = exp_config.get("dataset")
++	data_cl_name = dataset["name"]
++	dataset_args = dataset["dataset_args"]
++
++	proj_name = exp_config.get("project_name")
++
++	
++	print(f"Running experiment with network '{net_cl_name}' and dataset '{data_cl_name}''")
++	datasets_module = importlib.import_module("lab1.language_model.datasets.house_pred")
++	dataset_class_ = getattr(datasets_module, data_cl_name)
++	
+ 
+ 	models_module = importlib.import_module("lab1.language_model.models.base2")
+ 	model_class_ = getattr(models_module, model)
+ 
+ 	networks_module = importlib.import_module("lab1.language_model.networks.mlp")
+-	network_fn = getattr(networks_module, network)
++	network_fn = getattr(networks_module, net_cl_name)
+ 	
+ 	
+-	# network_args = experiment_config.get("network_args", {})
++	model = model_class_(dataset_cls=dataset_class_, network_fn=network_fn, dataset_args=dataset_args, network_args=net_config)
++
+ 
+ 	# mlflow.set_tracking_uri("sqlite:///mlruns.db")
+-	model = model_class_(dataset_cls=dataset_class_, network_fn=network_fn)
+ 	# input_schema = Schema([TensorSpec(type=np.dtype(np.float32), shape=(-1, 13), name="house_attribs")])
+ 	# output_schema = Schema([TensorSpec(type=np.dtype(np.float32), shape=(-1, 1), name="predicted house price")])
+ 	# signature = ModelSignature(inputs=input_schema, outputs=output_schema)
+ 	# input_example = np.array([[1., 2.5, 3. , 1.7, 2.1, 1.3, .5, .75, .89, 1.9, 2.15, 2.2, .6]])
+ 	# mlflow.pyfunc.save_model(path="my_model", python_model=model, signature=signature, input_example=input_example )
+ 
+-	config = dict(
+-		dataset = dataset,
+-		network = network,
+-		model = model,
+-		epoch = epoch,
+-		train_args = train_args
+-	)
+-
+-	net_config = dict(
+-			input_shape=(13,),
+-			output_shape=(1),
+-			layer_size=64,
+-			dropout_amount=0.2,
+-			num_layers=3
+-		)
+-	
++
+ 	save_net_artifact(project_name=proj_name, network_fn=network_fn)
+ 	save_data_raw_artifact(project_name=proj_name, data_class=dataset_class_)
+ 	save_data_processed_artifact(project_name=proj_name, data_class=dataset_class_)
+-	with wandb.init(project=proj_name, config=config) as run:
++	with wandb.init(project=proj_name, config=exp_config) as run:
+ 		config = wandb.config
+         
+-		
+-
+ 		model.fit(dataset=config.dataset, callbacks=[WandbCallback()])
+ 
+ 
+diff --git a/nd_lang/lab1/training/util_yaml.py b/nd_lang/lab1/training/util_yaml.py
+index 1259058..4776c10 100644
+--- a/nd_lang/lab1/training/util_yaml.py
++++ b/nd_lang/lab1/training/util_yaml.py
+@@ -1,19 +1,24 @@
+ import yaml
+ 
+-
+ # data = yaml.load(file_descriptor)
+ # yaml.dump(data)
+ 
+ def yaml_loader(filepath):
+-    """Loads a yaml file"""
++    """ Loads data from a yaml file """
+     with open(filepath, "r") as file_descriptor:
+-        data = yaml.load(file_descriptor)
++        data = yaml.load(file_descriptor, Loader=yaml.FullLoader)
+         return data
+ 
+ 
+ def yaml_dump(filepath, data):
++    """ Writes data to a yaml file """
+     with open(filepath, "w") as file_descriptor:
+-        yaml.dump(data, file_descriptor) 
++        yaml.dump(data, file_descriptor)
++
++
++
++
++
+ 
+ 
+ 
+diff --git a/nd_lang/wandb/debug-internal.log b/nd_lang/wandb/debug-internal.log
+index 67820a2..6ee6983 120000
+--- a/nd_lang/wandb/debug-internal.log
++++ b/nd_lang/wandb/debug-internal.log
+@@ -1 +1 @@
+-run-20210409_140443-3v5t95m3/logs/debug-internal.log
+\ No newline at end of file
++run-20210411_095544-8mm3x4ht/logs/debug-internal.log
+\ No newline at end of file
+diff --git a/nd_lang/wandb/debug.log b/nd_lang/wandb/debug.log
+index 021a3be..66947e3 120000
+--- a/nd_lang/wandb/debug.log
++++ b/nd_lang/wandb/debug.log
+@@ -1 +1 @@
+-run-20210409_140443-3v5t95m3/logs/debug.log
+\ No newline at end of file
++run-20210411_095544-8mm3x4ht/logs/debug.log
+\ No newline at end of file
+diff --git a/nd_lang/wandb/latest-run b/nd_lang/wandb/latest-run
+index 102b709..d3ebc6d 120000
+--- a/nd_lang/wandb/latest-run
++++ b/nd_lang/wandb/latest-run
+@@ -1 +1 @@
+-run-20210409_140443-3v5t95m3
+\ No newline at end of file
++run-20210411_095544-8mm3x4ht
+\ No newline at end of file
+diff --git a/nd_lang/yamls/experiments/default.yaml b/nd_lang/yamls/experiments/default.yaml
+index 5a2a104..d50d543 100644
+--- a/nd_lang/yamls/experiments/default.yaml
++++ b/nd_lang/yamls/experiments/default.yaml
+@@ -1,22 +1,18 @@
+-model: "Model"
+-
+-network:
+-        name: "mlp"
+-        network_args:
+-                shapes:
+-                        input_shape: ()
+-                        output_shape: ()
+-                hyperparams:
+-                        layers_size: 64
+-                        learning_rate: 0.03
+-                        epochs: 15
+-                        dropout_amount: 0.2
+-                        num_layers: 4
+-
+-
+ dataset:
+-        name: "HousingData"
+-        dataset_args: None
+-
+-
+-project_name: "nd_lang"
++  dataset_args: null
++  name: HousingData
++model: Model
++network:
++  name: mlp
++  network_args:
++    hyperparams:
++      activation_fn: relu
++      dropout_amount: 0.2
++      epochs: 15
++      layer_size: 64
++      learning_rate: 0.03
++      num_layers: 4
++    shapes:
++      input_shape: 13
++      output_shape: 1
++project_name: nd_lang

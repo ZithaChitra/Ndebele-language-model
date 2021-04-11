@@ -31,7 +31,7 @@ class Model():
 
         if network_args is None:
             network_args = {}
-        self.network = network_fn()
+        self.network = network_fn(network_args)
         self.network.summary()
 
         self.batch_argument_fn: Optional[Callable] = None

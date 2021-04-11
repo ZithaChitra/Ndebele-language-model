@@ -1,6 +1,5 @@
 """ Define mlp network function. """
-# from typing import Tuple
-
+from typing import Dict
 from tensorflow import keras
 from tensorflow.keras.models import Model
 # from tensorflow.keras.layers import Dense, Dropout, Flatten
@@ -13,16 +12,21 @@ def mlp(
 	# layer_size: int = 128,
 	# dropout_amount: float = 0.2,
 	# num_layers: int = 3, 
+	net_config: Dict
 )->Model:
 	"""
 	Creates a simple multi-layer perceptron
 	"""
-	inputs = keras.Input(shape=(13,))
+	activation_fn = net_config["hyperparams"]["activation_fn"]
+	input_s = net_config["shapes"]["input_shape"]
+	output_s = net_config["shapes"]["output_shape"]
+
+	inputs = keras.Input(shape=(input_s,))
 	dense = layers.Dense(64, activation="relu")
 	x = dense(inputs)
-	layer1 = layers.Dense(64, activation="relu")(x)
-	layer2 = layers.Dense(64, activation="relu")(layer1)
-	outputs = layers.Dense(1)(layer2)
+	layer1 = layers.Dense(64, activation=activation_fn)(x)
+	layer2 = layers.Dense(64, activation=activation_fn)(layer1)
+	outputs = layers.Dense(output_s)(layer2)
 	model = keras.Model(inputs=inputs, outputs=outputs, name="house_pred")
 
 

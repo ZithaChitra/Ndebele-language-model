@@ -14,23 +14,15 @@ import numpy as np
 
 
 
-def save_net_artifact(project_name, network_fn):
+def save_net_artifact(project_name, network_fn, net_config):
 	"""
 	Save artifact of neural net used. For model versioning
 	"""
-	config = dict(
-			input_shape=(13,),
-			output_shape=(1),
-			layer_size=64,
-			dropout_amount=0.2,
-			num_layers=3
-		)
 
-
-	with wandb.init(project=project_name, job_type="initialize", config=config) as run:
+	with wandb.init(project=project_name, job_type="initialize", config=net_config) as run:
 		config = wandb.config
 		
-		model = network_fn()
+		model = network_fn(net_config)
 
 		model_artifact = wandb.Artifact(
             "convnet", type="model",

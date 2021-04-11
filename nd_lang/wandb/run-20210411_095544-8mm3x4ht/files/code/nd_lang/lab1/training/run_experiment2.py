@@ -60,10 +60,10 @@ def run_experiment(config_yaml, train_args):
 	# mlflow.pyfunc.save_model(path="my_model", python_model=model, signature=signature, input_example=input_example )
 
 
-	save_net_artifact(project_name=proj_name, network_fn=network_fn, net_config=net_config)
+	save_net_artifact(project_name=proj_name, network_fn=network_fn)
 	save_data_raw_artifact(project_name=proj_name, data_class=dataset_class_)
 	save_data_processed_artifact(project_name=proj_name, data_class=dataset_class_)
-	with wandb.init(project=proj_name, config=exp_config):
+	with wandb.init(project=proj_name, config=exp_config) as run:
 		config = wandb.config
         
 		model.fit(dataset=config.dataset, callbacks=[WandbCallback()])
