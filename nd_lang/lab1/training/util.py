@@ -17,9 +17,16 @@ import numpy as np
 def save_net_artifact(project_name, network_fn, net_config):
 	"""
 	Save artifact of neural net used. For model versioning
+	Parametrs:
+	----------
+	project_name: string
+		The name of the project in wandb to send this
+		run to.
+	network_fn: 
 	"""
 
-	with wandb.init(project=project_name, job_type="initialize", config=net_config) as run:
+	with wandb.init(project=project_name, job_type="initialize",
+					config=net_config) as run:
 		config = wandb.config
 		
 		model = network_fn(net_config)
@@ -30,7 +37,6 @@ def save_net_artifact(project_name, network_fn, net_config):
             metadata=dict(config))        
 
 		model.save("initialized_model.keras")
-        # ➕ another way to add a file to an Artifact
 		model_artifact.new_file("initialized_model.keras")
 		wandb.save("initialized_model.keras")
 
@@ -66,6 +72,7 @@ def save_data_raw_artifact(project_name, data_class):
 
 
 def save_data_processed_artifact(project_name, data_class):
+	
 	data = data_class()
 	with wandb.init(project=project_name) as run:
 		preprocessed_data = wandb.Artifact(

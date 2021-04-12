@@ -16,12 +16,26 @@ DEFAULT_TRAIN_ARGS = {"batch_size":64, "epochs":16}
 
 
 @click.command()
-@click.argument("config_yaml", type=click.Path(exists=True), default="yamls/experiments/default.yaml")
+@click.argument("exp_config", type=click.Path(exists=True),)
+@click.argument("sweep_config", type=click.Path(exists=True),)
 @click.option("--train-args", default=DEFAULT_TRAIN_ARGS)
-def run_experiment(config_yaml, train_args):
+def run_experiment(exp_config, sweep_config, train_args):
+	"""
+	Run a single experiment.
+	Parameters:
+	----------
+	exp_config: File path
+		Path to a yaml file specifying the configuration for this
+		experiment. The includes model the model to use along with
+		it's hyperparamters and other args.
+	sweep_config: File path
+		Path to a yaml file specifying some information needed to 
+		run a sweep using wandb
+	
+	"""
 
 
-	exp_config = yaml_loader(config_yaml)
+	exp_config = yaml_loader(exp_config)
     
 	model = exp_config.get("model")
 
@@ -79,6 +93,7 @@ def run_experiment(config_yaml, train_args):
 
 
 if __name__ == "__main__":
+	wandb.login()
 	run_experiment()
 	
 

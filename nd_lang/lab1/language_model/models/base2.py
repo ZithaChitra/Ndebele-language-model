@@ -15,7 +15,10 @@ import numpy as np
 DIRNAME = Path(__file__).parents[1].resolve() / "weights"
 
 class Model():
-    """ Base class, to be subclassed by predictors for specific types of data """
+    """ 
+	Base class, to be subclassed by predictors for specific types of data.
+	This is a wrapper that 
+	"""
     def __init__(
         self,
         dataset_cls: type,

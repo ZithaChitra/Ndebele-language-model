@@ -15,7 +15,17 @@ def mlp(
 	net_config: Dict
 )->Model:
 	"""
-	Creates a simple multi-layer perceptron
+	Creates a simple multi-layer perceptron.
+	Parameters:
+	----------
+	net_config: Dict
+		A dictionary with keys 'shapes' and 'hyperparams'.
+		'shapes' is a dictionary containing the input and
+		output shape.
+		'hyperparameters' is a dictionary containing keys
+		representing other hyperparameters of the model such
+		as activation_fn, dropout_amount, etc.
+	return: Keras Model 
 	"""
 	activation_fn = net_config["hyperparams"]["activation_fn"]
 	input_s = net_config["shapes"]["input_shape"]
@@ -28,8 +38,7 @@ def mlp(
 	layer2 = layers.Dense(64, activation=activation_fn)(layer1)
 	outputs = layers.Dense(output_s)(layer2)
 	model = keras.Model(inputs=inputs, outputs=outputs, name="house_pred")
-
-
+	
 	return model
 
 
