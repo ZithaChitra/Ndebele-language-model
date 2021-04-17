@@ -1,0 +1,4 @@
+network:
+  network_args:
+    hyperparams:
+      epochs: 20

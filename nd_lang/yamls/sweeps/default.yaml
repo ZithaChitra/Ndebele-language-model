@@ -1,0 +1,13 @@
+method: grid
+metric:
+  goal: minimize
+  name: loss
+parameters:
+  activation-fn:
+    values:
+    - relu
+  epochs:
+    values:
+    - 15
+    - 20
+program: lab1/training/run_experiment2.py

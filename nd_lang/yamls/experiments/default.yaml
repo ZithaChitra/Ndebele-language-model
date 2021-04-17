@@ -8,7 +8,7 @@ network:
     hyperparams:
       activation_fn: relu
       dropout_amount: 0.2
-      epochs: 15
+      epochs: '20'
       layer_size: 64
       learning_rate: 0.03
       num_layers: 4

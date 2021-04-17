@@ -53,12 +53,7 @@ def save_data_raw_artifact(project_name, data_class):
 		surname="Chitakatira"
 	)
 	with wandb.init(project=project_name ,config=config) as run:
-		wandb.log(
-			{
-				"metric1": 28,
-				"metric2": 44
-			}
-		)
+		
 		raw_data = wandb.Artifact(
             "mnist-raw", type="dataset",
             description="sklearn.datasets.load_boston",

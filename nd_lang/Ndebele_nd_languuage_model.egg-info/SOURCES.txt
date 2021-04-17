@@ -5,7 +5,6 @@ Ndebele_nd_languuage_model.egg-info/dependency_links.txt
 Ndebele_nd_languuage_model.egg-info/requires.txt
 Ndebele_nd_languuage_model.egg-info/top_level.txt
 lab1/__init__.py
-lab1/loader.py
 lab1/language_model/__init__.py
 lab1/language_model/ndebele_text_generator.py
 lab1/language_model/util.py

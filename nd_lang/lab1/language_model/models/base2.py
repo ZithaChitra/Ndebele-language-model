@@ -17,7 +17,20 @@ DIRNAME = Path(__file__).parents[1].resolve() / "weights"
 class Model():
     """ 
 	Base class, to be subclassed by predictors for specific types of data.
-	This is a wrapper that 
+	This is a wrapper that makes  it convinient to use different neural net
+	configurations during experiments. Configurations could be a different
+	neural net archicture, dataset or maybe just hyperparameters.
+	
+	Parameters:
+	----------
+	dataset_cls: type
+		Name of class that interfaces with your dataset.
+	network_fn: Callable[..., KerasModel]
+		Name of function that returns the KerasModel to be used for training.
+	dataset_args: Dict
+		A dictionary of arguments for modifying the dataset
+	network_args:
+		A dictionary of arguments for creating model
 	"""
     def __init__(
         self,

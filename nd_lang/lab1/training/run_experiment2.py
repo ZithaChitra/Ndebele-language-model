@@ -6,7 +6,7 @@ import click
 
 # from lab1.training.util import train_model
 from lab1.training.util import save_net_artifact, save_data_raw_artifact, save_data_processed_artifact
-from lab1.training.util_yaml import yaml_loader
+from lab1.training.util_yaml import yaml_loader, yaml_dump
 import wandb
 from wandb.keras import WandbCallback
 # import numpy as np
@@ -16,10 +16,11 @@ DEFAULT_TRAIN_ARGS = {"batch_size":64, "epochs":16}
 
 
 @click.command()
-@click.argument("exp_config", type=click.Path(exists=True),)
-@click.argument("sweep_config", type=click.Path(exists=True),)
-@click.option("--train-args", default=DEFAULT_TRAIN_ARGS)
-def run_experiment(exp_config, sweep_config, train_args):
+@click.argument("exp-config-yaml", type=click.Path(exists=True), default="yamls/experiments/default.yaml")
+@click.option("--epochs")
+@click.option("--activation-fn")
+@click.option("--optimizer")
+def run_experiment(exp_config_yaml, epochs, activation_fn, optimizer):
 	"""
 	Run a single experiment.
 	Parameters:
@@ -35,8 +36,14 @@ def run_experiment(exp_config, sweep_config, train_args):
 	"""
 
 
-	exp_config = yaml_loader(exp_config)
-    
+	exp_config = yaml_loader(exp_config_yaml)
+	exp_config["network"]["network_args"]["hyperparams"]["epochs"] = epochs
+	exp_config["network"]["network_args"]["hyperparams"]["activation_fn"] = activation_fn
+	# exp_config["network"]["network_args"]["hyperparams"]["optimizer"] = optimizer
+	yaml_dump(exp_config_yaml, exp_config)
+
+
+
 	model = exp_config.get("model")
 
 	network = exp_config.get("network")
@@ -66,6 +73,7 @@ def run_experiment(exp_config, sweep_config, train_args):
 	model = model_class_(dataset_cls=dataset_class_, network_fn=network_fn, dataset_args=dataset_args, network_args=net_config)
 
 
+
 	# mlflow.set_tracking_uri("sqlite:///mlruns.db")
 	# input_schema = Schema([TensorSpec(type=np.dtype(np.float32), shape=(-1, 13), name="house_attribs")])
 	# output_schema = Schema([TensorSpec(type=np.dtype(np.float32), shape=(-1, 1), name="predicted house price")])
@@ -81,6 +89,10 @@ def run_experiment(exp_config, sweep_config, train_args):
 		config = wandb.config
         
 		model.fit(dataset=config.dataset, callbacks=[WandbCallback()])
+		data = dataset_class_()
+		# mse = model.network.evaluate(data.X_tr, data.y_tr)
+		# wandb.log({"mse": mse})
+		
 
 
 	# model_ = train_model(
